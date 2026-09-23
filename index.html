@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>L'Escale — Chez Jhonn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF8F1;
+    --ink:#161616;
+    --gold:#C79A3E;
+    --gold-dark:#9E7526;
+    --coral:#B0472B;
+    --line: rgba(22,22,22,0.15);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:var(--ink);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.5;
+  }
+
+  .scroller{
+    height:100vh;
+    height:100dvh;
+    overflow-y:scroll;
+    scroll-snap-type:y mandatory;
+    -webkit-overflow-scrolling:touch;
+  }
+  .page{
+    height:100vh;
+    height:100dvh;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    padding: calc(28px + env(safe-area-inset-top,0px)) 26px calc(30px + env(safe-area-inset-bottom,0px));
+    overflow:hidden;
+  }
+
+  .cover{
+    background:
+      radial-gradient(ellipse at 30% 15%, rgba(199,154,62,0.35), transparent 55%),
+      linear-gradient(160deg, #0d1a22 0%, #14243a 55%, #0b1b1c 100%);
+    color:var(--cream);
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+  }
+  .cover .icons{display:flex;align-items:center;gap:16px;margin-bottom:18px;}
+  .cover svg{width:34px;height:34px;color:var(--gold);}
+  .cover h1{
+    font-family:'Fraunces',serif;
+    font-weight:900;
+    font-size:clamp(2.8rem,12vw,4.6rem);
+    margin:0;
+    letter-spacing:0.5px;
+  }
+  .cover .badge{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:1.1rem;
+    letter-spacing:2px;
+    color:var(--ink);
+    background:var(--gold);
+    padding:6px 26px;
+    border-radius:20px;
+    margin-top:10px;
+    display:inline-block;
+  }
+  .cover .tag{
+    margin-top:18px;
+    font-size:0.85rem;
+    letter-spacing:0.5px;
+    color:#d8cdb4;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .cover .menu-word{
+    margin-top:60px;
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:2.2rem;
+    color:var(--gold);
+  }
+  .cover .swipe{
+    position:absolute;
+    bottom:calc(26px + env(safe-area-inset-bottom,0px));
+    font-size:0.78rem;
+    color:#c9bd9e;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+  }
+  .cover .swipe svg{width:18px;height:18px;color:#c9bd9e;animation:bob 1.6s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
+
+  .menu-page{background:var(--cream);}
+  .brand{display:flex;flex-direction:column;align-items:center;margin-bottom:20px;}
+  .brand .row{display:flex;align-items:center;gap:10px;}
+  .brand svg.anchor{width:20px;height:20px;color:var(--gold-dark);}
+  .brand h2{font-family:'Fraunces',serif;font-weight:800;font-size:1.6rem;margin:2px 0 6px;letter-spacing:0.5px;}
+  .brand .sub{font-family:'Fraunces',serif;font-style:italic;font-size:0.95rem;color:#fff;background:var(--gold-dark);padding:2px 18px;border-radius:12px;}
+
+  .ribbon{display:flex;align-items:center;gap:12px;background:var(--gold);border-radius:8px;padding:9px 16px;margin-bottom:18px;}
+  .ribbon .icon{width:30px;height:30px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .ribbon .icon svg{width:16px;height:16px;color:var(--gold);}
+  .ribbon h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.05rem;letter-spacing:0.5px;color:var(--ink);margin:0;}
+
+  .list{flex:1;overflow:hidden;}
+  .item{display:flex;align-items:baseline;gap:8px;padding:8px 2px;border-bottom:1px dotted var(--line);}
+  .item:last-child{border-bottom:none;}
+  .item .name{font-weight:500;font-size:0.95rem;}
+  .item .note{font-size:0.75rem;color:#7a7a7a;font-style:italic;}
+  .item .fill{flex:1;border-bottom:1px dotted var(--line);transform:translateY(-4px);}
+  .item .price{font-family:'Fraunces',serif;font-weight:700;color:var(--coral);font-size:0.98rem;white-space:nowrap;}
+  .note-block{color:#7a7a7a;font-style:italic;font-size:0.92rem;padding:6px 2px;}
+
+  .subhead{font-family:'Fraunces',serif;font-weight:600;font-size:0.85rem;color:var(--gold-dark);margin:16px 0 4px;letter-spacing:0.5px;}
+
+  .foot{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px;}
+  .foot .wave{flex:1;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+  .foot .num{width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--gold);font-family:'Fraunces',serif;font-weight:700;font-size:0.8rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+  .merci-line{text-align:center;font-family:'Fraunces',serif;font-style:italic;color:var(--gold-dark);font-size:1.15rem;margin-top:16px;}
+
+  .dots{position:fixed;right:10px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:9px;z-index:5;}
+  .dots a{width:7px;height:7px;border-radius:50%;background:rgba(199,154,62,0.55);display:block;}
+  @media (prefers-reduced-motion: reduce){.cover .swipe svg{animation:none;}}
+</style>
+</head>
+<body>
+
+<nav class="dots" aria-hidden="true">
+  <a href="#p0"></a><a href="#p1"></a><a href="#p2"></a><a href="#p3"></a><a href="#p4"></a><a href="#p5"></a>
+</nav>
+
+<div class="scroller">
+
+  <section class="page cover" id="p0">
+    <div class="icons">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="4.5" r="1.6" fill="currentColor" stroke="none"/><path d="M12 6.1V19"/><path d="M8.2 9H15.8"/><path d="M4 13c0 4.5 3.6 6.8 8 7 4.4-.2 8-2.5 8-7"/><path d="M4 13l2.5-2M20 13l-2.5-2"/></svg>
+    </div>
+    <h1>L'Escale</h1>
+    <span class="badge">CHEZ JHONN</span>
+    <div class="tag"><span>Bonne ambiance</span>·<span>Bon repas</span>·<span>Chez nous, c'est l'escale !</span></div>
+    <div class="menu-word">Menu — Notre carte</div>
+    <div class="swipe">
+      Glissez pour voir la carte
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16M6 14l6 6 6-6"/></svg>
+    </div>
+  </section>
+
+  <section class="page menu-page" id="p1">
+    <div class="brand">
+      <div class="row"><svg class="anchor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="4.5" r="1.6" fill="currentColor" stroke="none"/><path d="M12 6.1V19"/><path d="M8.2 9H15.8"/><path d="M4 13c0 4.5 3.6 6.8 8 7 4.4-.2 8-2.5 8-7"/><path d="M4 13l2.5-2M20 13l-2.5-2"/></svg><h2>L'Escale</h2></div>
+      <span class="sub">CHEZ JHONN</span>
+    </div>
+    <div class="ribbon">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3v7a2 2 0 002 2v9M6 3v7M8 3v7M6 10h2"/><path d="M17 3c-2 2-2 6 0 9v9"/></svg></span>
+      <h3>Nos plats</h3>
+    </div>
+    <div class="list">
+      <div class="item"><span class="name">1/2 poulet <span class="note">(braisé, sauté, grillé)</span></span><span class="fill"></span><span class="price">3 000</span></div>
+      <div class="item"><span class="name">1 poulet <span class="note">(braisé, sauté, grillé)</span></span><span class="fill"></span><span class="price">6 000</span></div>
+      <div class="item"><span class="name">Kedjenou de poulet</span><span class="fill"></span><span class="price">8 000</span></div>
+      <div class="item"><span class="name">1/2 kedjenou</span><span class="fill"></span><span class="price">4 000</span></div>
+      <div class="item"><span class="name">Soupe de poisson</span><span class="fill"></span><span class="price">5 000</span></div>
+      <div class="item"><span class="name">Poisson <span class="note">(braisé, sauté, grillé)</span></span><span class="fill"></span><span class="price">7 000 – 25 000</span></div>
+      <div class="item"><span class="name">Sol braisé <span class="note">(à partir de)</span></span><span class="fill"></span><span class="price">4 000</span></div>
+      <div class="item"><span class="name">Porc <span class="note">(braisé, sauté, grillé)</span></span><span class="fill"></span><span class="price">5 500</span></div>
+      <div class="item"><span class="name">Riz soumara</span><span class="fill"></span><span class="price">3 000 – 5 000</span></div>
+      <div class="item"><span class="name">Caille braisé</span><span class="fill"></span><span class="price">5 000</span></div>
+      <div class="item"><span class="name">Soupe de pintade</span><span class="fill"></span><span class="price">12 000</span></div>
+      <div class="item"><span class="name">Saucisse</span><span class="fill"></span><span class="price">3 500</span></div>
+    </div>
+    <div class="foot"><div class="wave"></div><span class="num">1</span><div class="wave"></div></div>
+  </section>
+
+  <section class="page menu-page" id="p2">
+    <div class="brand">
+      <div class="row"><svg class="anchor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="4.5" r="1.6" fill="currentColor" stroke="none"/><path d="M12 6.1V19"/><path d="M8.2 9H15.8"/><path d="M4 13c0 4.5 3.6 6.8 8 7 4.4-.2 8-2.5 8-7"/><path d="M4 13l2.5-2M20 13l-2.5-2"/></svg><h2>L'Escale</h2></div>
+      <span class="sub">CHEZ JHONN</span>
+    </div>
+    <div class="ribbon">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9V5a2 2 0 012-2h8a2 2 0 012 2v4"/><path d="M4 9h16l-1.2 9.5A2 2 0 0117 20H7a2 2 0 01-1.98-1.5L4 9z"/></svg></span>
+      <h3>Nos accompagnements</h3>
+    </div>
+    <div class="list">
+      <div class="item"><span class="name">Fritte</span><span class="fill"></span><span class="price">1 000</span></div>
+      <div class="item"><span class="name">Alloco</span><span class="fill"></span><span class="price">1 500</span></div>
+      <div class="item"><span class="name">Attieke</span><span class="fill"></span><span class="price">1 000</span></div>
+      <div class="item"><span class="name">Riz</span><span class="fill"></span><span class="price">500</span></div>
+      <div class="item"><span class="name">Igname</span><span class="fill"></span><span class="price">1 000</span></div>
+    </div>
+    <div class="foot"><div class="wave"></div><span class="num">2</span><div class="wave"></div></div>
+  </section>
+
+  <section class="page menu-page" id="p3">
+    <div class="brand">
+      <div class="row"><svg class="anchor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="4.5" r="1.6" fill="currentColor" stroke="none"/><path d="M12 6.1V19"/><path d="M8.2 9H15.8"/><path d="M4 13c0 4.5 3.6 6.8 8 7 4.4-.2 8-2.5 8-7"/><path d="M4 13l2.5-2M20 13l-2.5-2"/></svg><h2>L'Escale</h2></div>
+      <span class="sub">CHEZ JHONN</span>
+    </div>
+    <div class="ribbon">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3h8l-1 6H9L8 3z"/><path d="M9 9l1 11a1 1 0 001 1h2a1 1 0 001-1l1-11"/></svg></span>
+      <h3>Nos boissons</h3>
+    </div>
+    <div class="list">
+      <div class="item"><span class="name">Coca cola</span><span class="fill"></span><span class="price">1 000</span></div>
+      <div class="item"><span class="name">Fanta</span><span class="fill"></span><span class="price">1 000</span></div>
+      <div class="item"><span class="name">Heineken</span><span class="fill"></span><span class="price">1 000</span></div>
+      <div class="item"><span class="name">Guinness</span><span class="fill"></span><span class="price">1 000</span></div>
+      <div class="item"><span class="name">Desperado</span><span class="fill"></span><span class="price">1 000</span></div>
+      <div class="item"><span class="name">Castel</span><span class="fill"></span><span class="price">1 000</span></div>
+      <div class="item"><span class="name">Beaufort</span><span class="fill"></span><span class="price">1 000</span></div>
+      <div class="item"><span class="name">Eau minérale</span><span class="fill"></span><span class="price">1 000</span></div>
+    </div>
+    <div class="merci-line" style="margin-top:auto;font-size:0.95rem;">Des boissons pour tous les goûts !</div>
+    <div class="foot"><div class="wave"></div><span class="num">3</span><div class="wave"></div></div>
+  </section>
+
+  <section class="page menu-page" id="p4">
+    <div class="brand">
+      <div class="row"><svg class="anchor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="4.5" r="1.6" fill="currentColor" stroke="none"/><path d="M12 6.1V19"/><path d="M8.2 9H15.8"/><path d="M4 13c0 4.5 3.6 6.8 8 7 4.4-.2 8-2.5 8-7"/><path d="M4 13l2.5-2M20 13l-2.5-2"/></svg><h2>L'Escale</h2></div>
+      <span class="sub">CHEZ JHONN</span>
+    </div>
+    <div class="ribbon">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12l-2 8a4 4 0 01-8 0L6 3z"/><path d="M10 15v4M14 15v4M8 19h8"/></svg></span>
+      <h3>Nos wisky &amp; rhum</h3>
+    </div>
+    <div class="list">
+      <div class="item"><span class="name">Jack Daniel</span><span class="fill"></span><span class="price">35 000</span></div>
+      <div class="item"><span class="name">Red Label</span><span class="fill"></span><span class="price">25 000</span></div>
+    </div>
+    <div class="subhead">Nos tournées</div>
+    <div class="list">
+      <div class="item"><span class="name">Jack Daniel</span><span class="fill"></span><span class="price">5 000</span></div>
+      <div class="item"><span class="name">Tous les autres</span><span class="fill"></span><span class="price">4 000</span></div>
+    </div>
+    <div class="subhead">Nos short</div>
+    <div class="list">
+      <div class="item"><span class="name">1</span><span class="fill"></span><span class="price">1 000</span></div>
+      <div class="item"><span class="name">6</span><span class="fill"></span><span class="price">5 000</span></div>
+    </div>
+    <div class="foot"><div class="wave"></div><span class="num">4</span><div class="wave"></div></div>
+  </section>
+
+  <section class="page menu-page" id="p5">
+    <div class="brand">
+      <div class="row"><svg class="anchor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="4.5" r="1.6" fill="currentColor" stroke="none"/><path d="M12 6.1V19"/><path d="M8.2 9H15.8"/><path d="M4 13c0 4.5 3.6 6.8 8 7 4.4-.2 8-2.5 8-7"/><path d="M4 13l2.5-2M20 13l-2.5-2"/></svg><h2>L'Escale</h2></div>
+      <span class="sub">CHEZ JHONN</span>
+    </div>
+    <div class="ribbon">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3h10l-1 8a4 4 0 01-8 0L7 3z"/><path d="M12 15v6M8 21h8"/></svg></span>
+      <h3>Nos vins</h3>
+    </div>
+    <div class="list">
+      <div class="item"><span class="name">Bouteille</span><span class="fill"></span><span class="price">10 000 – 12 000 – 15 000</span></div>
+    </div>
+    <div class="subhead">Apéritifs &amp; digestifs</div>
+    <div class="note-block">À la demande</div>
+    <div class="subhead">Boissons chaudes</div>
+    <div class="list">
+      <div class="item"><span class="name">Thé Lipton</span><span class="fill"></span><span class="price">1 000</span></div>
+      <div class="item"><span class="name">Nescafé</span><span class="fill"></span><span class="price">1 000</span></div>
+    </div>
+    <div class="merci-line" style="margin-top:auto;">Merci de votre fidélité !</div>
+    <div class="foot"><div class="wave"></div><span class="num">5</span><div class="wave"></div></div>
+  </section>
+
+</div>
+</body>
+</html>
